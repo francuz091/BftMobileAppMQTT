@@ -38,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         connectToHiveMQ()
 
 
-        binding.btnConnect.setOnClickListener { connectToHiveMQ() }
-        binding.btnDisconnect.setOnClickListener { disconnectFromHiveMQ() }
+
         binding.btnPin1.setOnClickListener { sendCommand("PIN1") }
         binding.btnPin2.setOnClickListener { sendCommand("PIN2") }
         binding.btnPin3.setOnClickListener { sendCommand("PIN3") }
@@ -262,17 +261,17 @@ class MainActivity : AppCompatActivity() {
     private fun addMessage(
         message: String
     ) {
-        val oldText =
-            binding.tvMessages.text.toString()
-
-        if (oldText == "Nema poruka.") {
-
-            binding.tvMessages.text =
-                message
-        } else {
-            binding.tvMessages.text =
-                "$oldText\n\n$message"
-        }
+//        val oldText =
+//            binding.tvMessages.text.toString()
+//
+//        if (oldText == "Nema poruka.") {
+//
+//            binding.tvMessages.text =
+//                message
+//        } else {
+//            binding.tvMessages.text =
+//                "$oldText\n\n$message"
+//        }
     }
 
 
