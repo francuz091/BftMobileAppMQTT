@@ -19,125 +19,32 @@ import java.util.UUID
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    // ============================================================
-    // HIVEMQ
-    // ============================================================
-
-    private val mqttHost =
-        "0129e7865c6e4b78b216ad110505c749.s1.eu.hivemq.cloud"
-
+    private val mqttHost = "0129e7865c6e4b78b216ad110505c749.s1.eu.hivemq.cloud"
     private val mqttPort = 8883
-
     private val mqttUsername = "esp32"
-
-    // STAVI SVOJU HIVEMQ LOZINKU
     private val mqttPassword = "123456789"
-
-
-    // ============================================================
-    // MQTT TOPICS
-    // ============================================================
-
-    private val commandTopic =
-        "esp32/test/command"
-
-    private val statusTopic =
-        "esp32/test/status"
-
-
-    // ============================================================
-    // MQTT CLIENT
-    // ============================================================
-
+    private val commandTopic = "esp32/test/command"
+    private val statusTopic = "esp32/test/status"
     private lateinit var mqttClient: Mqtt3AsyncClient
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
-
-        binding =
-            ActivityMainBinding.inflate(layoutInflater)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
         // Kreiranje MQTT clienta
         createMqttClient()
+        connectToHiveMQ()
 
 
-        // ========================================================
-        // CONNECT
-        // ========================================================
-
-        binding.btnConnect.setOnClickListener {
-
-            connectToHiveMQ()
-
-        }
-
-
-        // ========================================================
-        // DISCONNECT
-        // ========================================================
-
-        binding.btnDisconnect.setOnClickListener {
-
-            disconnectFromHiveMQ()
-
-        }
-
-
-        // ========================================================
-        // PIN 1
-        // ========================================================
-
-        binding.btnPin1.setOnClickListener {
-
-            sendCommand("PIN1")
-
-        }
-
-
-        // ========================================================
-        // PIN 2
-        // ========================================================
-
-        binding.btnPin2.setOnClickListener {
-
-            sendCommand("PIN2")
-
-        }
-
-
-        // ========================================================
-        // PIN 3
-        // ========================================================
-
-        binding.btnPin3.setOnClickListener {
-
-            sendCommand("PIN3")
-
-        }
-
-
-        // ========================================================
-        // PIN 4
-        // ========================================================
-
-        binding.btnPin4.setOnClickListener {
-
-            sendCommand("PIN4")
-
-        }
+        binding.btnConnect.setOnClickListener { connectToHiveMQ() }
+        binding.btnDisconnect.setOnClickListener { disconnectFromHiveMQ() }
+        binding.btnPin1.setOnClickListener { sendCommand("PIN1") }
+        binding.btnPin2.setOnClickListener { sendCommand("PIN2") }
+        binding.btnPin3.setOnClickListener { sendCommand("PIN3") }
+        binding.btnPin4.setOnClickListener { sendCommand("PIN4") }
     }
-
-
-    // ============================================================
-    // CREATE MQTT CLIENT
-    // ============================================================
 
     private fun createMqttClient() {
 
@@ -153,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             .useSslWithDefaultConfig()
             .buildAsync()
 
-
         // Primanje MQTT poruka
 
         mqttClient.publishes(
@@ -165,17 +71,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    // ============================================================
-    // CONNECT
-    // ============================================================
-
     private fun connectToHiveMQ() {
 
         updateStatus(
             "Spajanje na HiveMQ..."
         )
-
 
         mqttClient.connectWith()
             .simpleAuth()
@@ -213,10 +113,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // ============================================================
-    // SUBSCRIBE
-    // ============================================================
-
     private fun subscribeToStatus() {
 
         mqttClient.subscribeWith()
@@ -249,10 +145,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // ============================================================
-    // SEND COMMAND
-    // ============================================================
-
     private fun sendCommand(
         command: String
     ) {
@@ -265,7 +157,6 @@ class MainActivity : AppCompatActivity() {
 
             return
         }
-
 
         mqttClient.publishWith()
             .topic(commandTopic)
@@ -302,10 +193,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // ============================================================
-    // RECEIVE MESSAGE
-    // ============================================================
-
     private fun handleIncomingMessage(
         publish: Mqtt3Publish
     ) {
@@ -319,7 +206,6 @@ class MainActivity : AppCompatActivity() {
                 StandardCharsets.UTF_8
             )
 
-
         runOnUiThread {
 
             addMessage(
@@ -329,10 +215,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    // ============================================================
-    // DISCONNECT
-    // ============================================================
 
     private fun disconnectFromHiveMQ() {
 
@@ -344,7 +226,6 @@ class MainActivity : AppCompatActivity() {
 
             return
         }
-
 
         mqttClient.disconnect()
             .whenComplete {
@@ -370,61 +251,38 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-
-    // ============================================================
-    // UPDATE STATUS
-    // ============================================================
-
     private fun updateStatus(
         status: String
     ) {
-
         binding.tvConnectionStatus.text =
             "Status: $status"
     }
 
 
-    // ============================================================
-    // ADD MESSAGE
-    // ============================================================
-
     private fun addMessage(
         message: String
     ) {
-
         val oldText =
             binding.tvMessages.text.toString()
-
 
         if (oldText == "Nema poruka.") {
 
             binding.tvMessages.text =
                 message
-
         } else {
-
             binding.tvMessages.text =
                 "$oldText\n\n$message"
-
         }
     }
 
 
-    // ============================================================
-    // DESTROY
-    // ============================================================
-
     override fun onDestroy() {
 
         if (::mqttClient.isInitialized) {
-
             if (mqttClient.state.isConnected) {
-
                 mqttClient.disconnect()
-
             }
         }
-
         super.onDestroy()
     }
 }
