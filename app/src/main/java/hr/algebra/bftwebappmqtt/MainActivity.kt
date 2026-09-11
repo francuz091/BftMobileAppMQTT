@@ -3,6 +3,7 @@ package hr.algebra.bftwebappmqtt
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+
 import hr.algebra.bftwebappmqtt.databinding.ActivityMainBinding
 
 import com.hivemq.client.mqtt.MqttClient
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mqttUsername = "esp32"
 
-    // OVDJE STAVI SVOJU HIVEMQ LOZINKU
+    // STAVI SVOJU HIVEMQ LOZINKU
     private val mqttPassword = "123456789"
 
 
@@ -57,12 +58,13 @@ class MainActivity : AppCompatActivity() {
 
         enableEdgeToEdge()
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding =
+            ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 
 
-        // Kreiraj MQTT client
+        // Kreiranje MQTT clienta
         createMqttClient()
 
 
@@ -89,19 +91,45 @@ class MainActivity : AppCompatActivity() {
 
 
         // ========================================================
-        // SEND
+        // PIN 1
         // ========================================================
 
-        binding.btnSend.setOnClickListener {
+        binding.btnPin1.setOnClickListener {
 
-            val message =
-                binding.etMessage.text.toString()
+            sendCommand("PIN1")
 
-            if (message.isNotEmpty()) {
+        }
 
-                publishCommand(message)
 
-            }
+        // ========================================================
+        // PIN 2
+        // ========================================================
+
+        binding.btnPin2.setOnClickListener {
+
+            sendCommand("PIN2")
+
+        }
+
+
+        // ========================================================
+        // PIN 3
+        // ========================================================
+
+        binding.btnPin3.setOnClickListener {
+
+            sendCommand("PIN3")
+
+        }
+
+
+        // ========================================================
+        // PIN 4
+        // ========================================================
+
+        binding.btnPin4.setOnClickListener {
+
+            sendCommand("PIN4")
 
         }
     }
@@ -126,9 +154,7 @@ class MainActivity : AppCompatActivity() {
             .buildAsync()
 
 
-        // ========================================================
-        // RECEIVE MQTT MESSAGES
-        // ========================================================
+        // Primanje MQTT poruka
 
         mqttClient.publishes(
             MqttGlobalPublishFilter.ALL
@@ -141,12 +167,14 @@ class MainActivity : AppCompatActivity() {
 
 
     // ============================================================
-    // CONNECT TO HIVEMQ
+    // CONNECT
     // ============================================================
 
     private fun connectToHiveMQ() {
 
-        updateStatus("Spajanje na HiveMQ...")
+        updateStatus(
+            "Spajanje na HiveMQ..."
+        )
 
 
         mqttClient.connectWith()
@@ -159,7 +187,9 @@ class MainActivity : AppCompatActivity() {
             )
             .applySimpleAuth()
             .send()
-            .whenComplete { _: Mqtt3ConnAck?, throwable: Throwable? ->
+            .whenComplete {
+                    _: Mqtt3ConnAck?,
+                    throwable: Throwable? ->
 
                 runOnUiThread {
 
@@ -171,7 +201,9 @@ class MainActivity : AppCompatActivity() {
 
                     } else {
 
-                        updateStatus("CONNECTED")
+                        updateStatus(
+                            "CONNECTED"
+                        )
 
                         subscribeToStatus()
 
@@ -189,9 +221,13 @@ class MainActivity : AppCompatActivity() {
 
         mqttClient.subscribeWith()
             .topicFilter(statusTopic)
-            .qos(MqttQos.AT_LEAST_ONCE)
+            .qos(
+                MqttQos.AT_LEAST_ONCE
+            )
             .send()
-            .whenComplete { _, throwable ->
+            .whenComplete {
+                    _,
+                    throwable ->
 
                 runOnUiThread {
 
@@ -204,7 +240,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
 
                         addMessage(
-                            "Subscribed: $statusTopic"
+                            "Connected to $statusTopic"
                         )
 
                     }
@@ -214,10 +250,12 @@ class MainActivity : AppCompatActivity() {
 
 
     // ============================================================
-    // SEND COMMAND TO ESP32
+    // SEND COMMAND
     // ============================================================
 
-    private fun publishCommand(message: String) {
+    private fun sendCommand(
+        command: String
+    ) {
 
         if (!mqttClient.state.isConnected) {
 
@@ -231,27 +269,31 @@ class MainActivity : AppCompatActivity() {
 
         mqttClient.publishWith()
             .topic(commandTopic)
-            .qos(MqttQos.AT_LEAST_ONCE)
+            .qos(
+                MqttQos.AT_LEAST_ONCE
+            )
             .payload(
-                message.toByteArray(
+                command.toByteArray(
                     StandardCharsets.UTF_8
                 )
             )
             .send()
-            .whenComplete { _, throwable ->
+            .whenComplete {
+                    _,
+                    throwable ->
 
                 runOnUiThread {
 
                     if (throwable != null) {
 
                         addMessage(
-                            "SEND ERROR: ${throwable.message}"
+                            "GREŠKA: ${throwable.message}"
                         )
 
                     } else {
 
                         addMessage(
-                            "→ ESP32: $message"
+                            "→ ESP32: $command"
                         )
 
                     }
@@ -305,7 +347,9 @@ class MainActivity : AppCompatActivity() {
 
 
         mqttClient.disconnect()
-            .whenComplete { _, throwable ->
+            .whenComplete {
+                    _,
+                    throwable ->
 
                 runOnUiThread {
 

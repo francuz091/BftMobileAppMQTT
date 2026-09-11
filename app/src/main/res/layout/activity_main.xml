@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,66 +13,146 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ESP32 MQTT"
+            android:layout_gravity="center"
+            android:text="ESP32 CONTROL"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
 
         <TextView
             android:id="@+id/tvConnectionStatus"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="Status: DISCONNECTED"
             android:textSize="18sp"
             android:padding="12dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
 
         <Button
             android:id="@+id/btnConnect"
-            android:layout_width="match_parent"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:text="CONNECT"
-            android:layout_marginBottom="10dp"/>
+            android:layout_weight="1"
+            android:layout_margin="9dp"
+            android:layout_gravity="center"
+            android:text="CONNECT"/>
+
 
         <Button
             android:id="@+id/btnDisconnect"
-            android:layout_width="match_parent"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:text="DISCONNECT"
-            android:layout_marginBottom="20dp"/>
+            android:layout_weight="1"
+            android:layout_margin="9dp"
+            android:layout_gravity="center"
+            android:text="DISCONNECT"/>
 
-        <EditText
-            android:id="@+id/etMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Poruka"
-            android:inputType="text"
-            android:text="HELLO"
-            android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/btnSend"
+    </LinearLayout>
+
+
+
+        <!-- PIN 1 -->
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SEND TO ESP32"
-            android:layout_marginBottom="20dp"/>
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <!-- RED 1 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPin1"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="PIN 1"
+                    android:textSize="20sp"
+                    android:layout_margin="6dp" />
+
+                <Button
+                    android:id="@+id/btnPin2"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="PIN 2"
+                    android:textSize="20sp"
+                    android:layout_margin="6dp" />
+
+            </LinearLayout>
+
+
+            <!-- RED 2 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPin3"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="PIN 3"
+                    android:textSize="20sp"
+                    android:layout_margin="6dp" />
+
+                <Button
+                    android:id="@+id/btnPin4"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="PIN 4"
+                    android:textSize="20sp"
+                    android:layout_margin="6dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Primljene poruke:"
+            android:text="MQTT messages:"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/tvMessages"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nema poruka."
-            android:textSize="16sp"
-            android:padding="10dp"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nema poruka."
+                android:textSize="16sp"
+                android:padding="10dp" />
+
+
+        </ScrollView>
+
+
 
     </LinearLayout>
 
-</ScrollView>
+</LinearLayout>
